@@ -1,0 +1,9 @@
+{
+	"name": "df-eco-demo-ls",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "b64f0340-41b3-4732-8d8c-f337136fe4f9",
+		"tenantId": "7504e318-8e1e-4d55-bffd-875b4dee8260"
+	}
+}

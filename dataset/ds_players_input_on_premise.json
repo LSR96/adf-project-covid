@@ -1,0 +1,26 @@
+{
+	"name": "ds_players_input_on_premise",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "fs_on_premise_eco_demo_ls",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Project ECO DEMO"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "FileServerLocation",
+				"fileName": "players_21.csv"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,35 @@
+{
+	"name": "ds_players_landing",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_adlsecodemov2",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"file_output_landing": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Project ECO DEMO"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().file_output_landing",
+					"type": "Expression"
+				},
+				"fileSystem": "c-eco-demo-landing"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

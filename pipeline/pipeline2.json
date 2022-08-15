@@ -1,0 +1,141 @@
+{
+	"name": "pipeline2",
+	"properties": {
+		"activities": [
+			{
+				"name": "Transform and Move To Bronze Silver and Golden",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Move On Premise To Landing",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Variable file_output_landing",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/eco_demo/setup/transform_ecodemo_data_scala",
+					"baseParameters": {
+						"file_landing": {
+							"value": "@variables('file_output_landing')",
+							"type": "Expression"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_db_eco_demo",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Variable file_output_landing",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "file_output_landing",
+					"value": {
+						"value": "@concat('players_landing_', formatDateTime(utcnow(), 'yyyyMMdd'), '_', formatDateTime(utcnow(), 'HHmmss'), '.csv')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Move On Premise To Landing",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Variable file_output_landing",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "FileServerReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_players_input_on_premise",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_players_landing",
+						"type": "DatasetReference",
+						"parameters": {
+							"file_output_landing": {
+								"value": "@variables('file_output_landing')",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"variables": {
+			"file_output_landing": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Project ECO DEMO"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-08-15T00:17:12Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
